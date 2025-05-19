@@ -39,4 +39,5 @@ def test_to_html_with_props_and_children_with_props(self):
         '<div class="test"><span class="child">child</span></div>',
     )
 
-
+if __name__ == "__main__":
+    unittest.main()

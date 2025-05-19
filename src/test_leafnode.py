@@ -13,3 +13,6 @@ class TestLeafNode(unittest.TestCase):
     def test_leaf_no_value(self):
         node = LeafNode("a")
         self.assertRaises(ValueError, node.to_html)
+
+if __name__ == "__main__":
+    unittest.main()

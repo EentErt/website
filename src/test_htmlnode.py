@@ -37,3 +37,6 @@ class TestHTMLNode(unittest.TestCase):
         output = node.props_to_html()
         expected = ' prop="value"'
         self.assertEqual(output, expected)
+
+if __name__ == "__main__":
+    unittest.main()
