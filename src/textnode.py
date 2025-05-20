@@ -1,7 +1,5 @@
 from enum import Enum
-from htmlnode import HTMLNode
-from htmlnode import LeafNode
-from htmlnode import ParentNode
+from htmlnode import HTMLNode, LeafNode, ParentNode
 
 class TextType(Enum):
     TEXT = 1
@@ -45,3 +43,4 @@ def text_node_to_html_node(text_node):
             return LeafNode(tag="img", value="", props={"src": text_node.url, "alt": text_node.text})
         case _:
             raise Exception("Invalid text type")
+

@@ -9,7 +9,8 @@ def split_nodes_delimiter(old_nodes, delimiter, text_type = TextType.TEXT):
     for node in old_nodes:
         if node.text_type != TextType.TEXT:
             new_node = TextNode(node.text, node.text_type)
-            node_list.extend(new_node)
+            node_list.append(new_node)
+            continue
 
         # if the delimiter appears an odd number of times, it is unclosed, and invalid
         # if the delimiter appears an even number of times, it is closed, and valid

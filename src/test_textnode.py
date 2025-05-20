@@ -1,6 +1,6 @@
 import unittest
 from textnode import TextNode, TextType, text_node_to_html_node
-
+from text_to_textnodes import text_to_textnodes
 
 
 class TestTextNode(unittest.TestCase):
@@ -71,6 +71,55 @@ class TestTextNode(unittest.TestCase):
         node = TextNode("This is an image node", TextType.IMAGE)
         html_node = text_node_to_html_node(node)
         self.assertRaises(Exception)
-        
+
+    def test_text_to_textnodes(self):
+        text = "This is **text** with an _italic_ word and a `code block` and an ![obi wan image](https://i.imgur.com/fJRm4Vk.jpeg) and a [link](https://boot.dev)"
+        new_nodes = text_to_textnodes(text)
+        self.assertEqual(
+            [
+                TextNode("This is ", TextType.TEXT),
+                TextNode("text", TextType.BOLD),
+                TextNode(" with an ", TextType.TEXT),
+                TextNode("italic", TextType.ITALIC),
+                TextNode(" word and a ", TextType.TEXT),
+                TextNode("code block", TextType.CODE),
+                TextNode(" and an ", TextType.TEXT),
+                TextNode("obi wan image", TextType.IMAGE, "https://i.imgur.com/fJRm4Vk.jpeg"),
+                TextNode(" and a ", TextType.TEXT),
+                TextNode("link", TextType.LINK, "https://boot.dev"),
+            ],
+            new_nodes,
+        )
+
+    def test_text_to_textnodes_multiples_of_each_type(self):
+        text = "This is **text** with an _italic_ word **and** a `code block` _and_ an ![obi wan image](https://i.imgur.com/fJRm4Vk.jpeg) `and` a [link](https://boot.dev) and another ![fake image](https://i.imgur.com/fakeimage.jpeg) and another [link](https://another.link)"
+        new_nodes = text_to_textnodes(text)
+        self.assertEqual(
+            [
+                TextNode("This is ", TextType.TEXT),
+                TextNode("text", TextType.BOLD),
+                TextNode(" with an ", TextType.TEXT),
+                TextNode("italic", TextType.ITALIC),
+                TextNode(" word ", TextType.TEXT),
+                TextNode("and", TextType.BOLD),
+                TextNode(" a ", TextType.TEXT),
+                TextNode("code block", TextType.CODE),
+                TextNode(" ", TextType.TEXT), 
+                TextNode("and", TextType.ITALIC),
+                TextNode(" an ", TextType.TEXT),
+                TextNode("obi wan image", TextType.IMAGE, "https://i.imgur.com/fJRm4Vk.jpeg"),
+                TextNode(" ", TextType.TEXT),
+                TextNode("and", TextType.CODE),
+                TextNode(" a ", TextType.TEXT),
+                TextNode("link", TextType.LINK, "https://boot.dev"),
+                TextNode(" and another ", TextType.TEXT),
+                TextNode("fake image", TextType.IMAGE, "https://i.imgur.com/fakeimage.jpeg"),
+                TextNode(" and another ", TextType.TEXT),
+                TextNode("link", TextType.LINK, "https://another.link")
+            ],
+            new_nodes,
+        )
+
+
 if __name__ == "__main__":
     unittest.main()
