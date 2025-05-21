@@ -1,13 +1,16 @@
 from blocks import markdown_to_blocks, block_to_block_type
-from htmlnode import HTMLNode
-from textnode import text_to_textnodes
+from htmlnode import HTMLNode, ParentNode, LeafNode
+from splitdelimiter import text_to_textnodes
+from blocks import BlockNode, block_to_html_node
 
 def markdown_to_html_node(markdown):
     block_list = markdown_to_blocks(markdown)
-    node_list = list(map(lambda x : HTMLNode(x, block_to_block_type(x)), block_list))
+    block_list = list(map(lambda x : BlockNode(x, block_to_block_type(x)), block_list))
+    node_list = list(map(lambda x : block_to_html_node(x), block_list))
+    div = ""
+    return div
 
-def text_to_children(node_list):
-    for node in node_list:
-        leaf_list = list(map(lambda x : text_to_textnodes(x), node_list))
-        for leaf in leaf_list:
-        node.children = leaf_list
+
+
+
+        

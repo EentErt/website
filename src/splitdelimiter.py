@@ -1,4 +1,16 @@
 from textnode import TextType, TextNode
+from extract_links import split_nodes_image, split_nodes_link
+
+def text_to_textnodes(text):
+    node = TextNode(text, TextType.TEXT)
+
+    bold_nodes = split_nodes_delimiter([node], "**")
+    italic_nodes = split_nodes_delimiter(bold_nodes, "_")
+    code_nodes = split_nodes_delimiter(italic_nodes, "`")
+    link_nodes = split_nodes_link(code_nodes)
+    final_nodes = split_nodes_image(link_nodes)
+    return final_nodes
+
 
 def split_nodes_delimiter(old_nodes, delimiter, text_type = TextType.TEXT):
     node_list = []

@@ -1,7 +1,5 @@
 from enum import Enum
 from htmlnode import LeafNode
-from splitdelimiter import split_nodes_delimiter
-from extract_links import split_nodes_image, split_nodes_link
 
 class TextType(Enum):
     TEXT = 1
@@ -46,14 +44,5 @@ def text_node_to_html_node(text_node):
         case _:
             raise Exception("Invalid text type")
 
-def text_to_textnodes(text):
-    node = TextNode(text, TextType.TEXT)
-
-    bold_nodes = split_nodes_delimiter([node], "**")
-    italic_nodes = split_nodes_delimiter(bold_nodes, "_")
-    code_nodes = split_nodes_delimiter(italic_nodes, "`")
-    link_nodes = split_nodes_link(code_nodes)
-    final_nodes = split_nodes_image(link_nodes)
 
 
-    return final_nodes
