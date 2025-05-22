@@ -93,12 +93,10 @@ def text_to_list_items(text, block_type):
         case BlockType.UNORDERED_LIST:
             list_items = list(map(lambda x : x.lstrip("- "), list_items))
             list_items = list(map(lambda x : make_list_item(x), list_items))
-            print(list_items)
             return list_items
         case BlockType.ORDERED_LIST:
             list_items = list(map(lambda x : re.sub(r"(^\d+\.\s)", "", x), list_items))
             list_items = list(map(lambda x : make_list_item(x), list_items))
-            print(list_items)
             return list_items
         case _:
             raise ValueError("invalid block type")
