@@ -1,7 +1,7 @@
 from enum import Enum
-from htmlnode import HTMLNode, ParentNode
+from htmlnode import HTMLNode, ParentNode, LeafNode
 from splitdelimiter import text_to_textnodes
-from textnode import text_node_to_html_node, TextNode
+from textnode import text_node_to_html_node
 import re
 
 class BlockType(Enum):
@@ -57,12 +57,14 @@ def heading_number(text):
 def block_to_html_node(block_node):
     match block_node.block_type:
         case BlockType.PARAGRAPH:
-            return ParentNode("p", text_to_children(block_node.text))
+            children = text_to_children(block_node.text)
+            node = ParentNode("p", children)
+            return node
         case BlockType.HEADING:
             return ParentNode(f"h{heading_number(block_node.text)}", text_to_children(block_node.text))
         case BlockType.CODE:
-            text_node = TextNode("code", block_node.text)
-            return text_node_to_html_node(text_node)
+            text = block_node.text.strip("`")
+            return LeafNode("code", text)
         case BlockType.QUOTE:
             return ParentNode("blockquote", text_to_children(block_node.text))
         case BlockType.UNORDERED_LIST:

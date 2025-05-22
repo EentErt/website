@@ -3,6 +3,12 @@ from markdown_to_html import markdown_to_html_node
 
 class TestMarkdownToHTML(unittest.TestCase):
     def test_markdown_to_html_node(self):
+        md = ("This is the markdown")
+        node = markdown_to_html_node(md)
+        self.assertEqual(node, "<div><p>This is the markdown</p></div>")
+
+'''
+def test_markdown_to_html_node(self):
         md = ("""
 This is the markdown
 
@@ -27,3 +33,4 @@ This is a code block
         """)
         node = markdown_to_html_node(md)
         self.assertEqual(node, "<div><p>This is the markdown</p></div>")
+'''

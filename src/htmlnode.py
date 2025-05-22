@@ -11,9 +11,11 @@ class HTMLNode():
         raise NotImplementedError()
 
     def props_to_html(self):
-        props = self.props.items()
-        html = "".join(list(map(lambda x : f" {x[0]}=\"{x[1]}\"", props)))
-        return html
+        if self.props is not None:
+            props = self.props.items()
+            html = "".join(list(map(lambda x : f" {x[0]}=\"{x[1]}\"", props)))
+            return html
+        pass
     
     def __repr__(self):
         return f"HTMLNode({self.tag}, {self.value}, {self.children}, {self.props})"
@@ -35,8 +37,8 @@ class LeafNode(HTMLNode):
     def to_html(self):
         if self.value is None:
             raise ValueError("LeafNode must have a value")
+        output = f"<{self.tag}"
         if self.tag is not None:
-            output = f"<{self.tag}"
             if self.props is not None:
                 output += self.props_to_html()
             output += f">{self.value}</{self.tag}>"
@@ -52,6 +54,9 @@ class LeafNode(HTMLNode):
         return False
 
     def __repr__(self):
+        return f"LeafNode({self.tag}, {self.value}, {self.props})"
+    
+    def __str__(self):
         return f"LeafNode({self.tag}, {self.value}, {self.props})"
 
 class ParentNode(HTMLNode):
@@ -81,4 +86,7 @@ class ParentNode(HTMLNode):
         return False
 
     def __repr__(self):
+        return f"ParentNode({self.tag}, {self.value}, {self.props})"
+    
+    def __str__(self):
         return f"ParentNode({self.tag}, {self.value}, {self.props})"
