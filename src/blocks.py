@@ -61,16 +61,23 @@ def block_to_html_node(block_node):
             node = ParentNode("p", children)
             return node
         case BlockType.HEADING:
-            return ParentNode(f"h{heading_number(block_node.text)}", text_to_children(block_node.text))
+            text = re.sub(r"(^\#+\s)", "", block_node.text)
+            return ParentNode(f"h{heading_number(block_node.text)}", text_to_children(text))
         case BlockType.CODE:
             text = block_node.text.strip("`")
-            return LeafNode("code", text)
+            text = text.lstrip("\n")
+            child = [LeafNode("code", text)]
+            parent = ParentNode("pre", children = child)
+            return parent
         case BlockType.QUOTE:
-            return ParentNode("blockquote", text_to_children(block_node.text))
+            text = block_node.text.lstrip(">")
+            return ParentNode("blockquote", text_to_children(text))
         case BlockType.UNORDERED_LIST:
-            pass
+            node = ParentNode("ul", text_to_list_items(block_node.text, block_node.block_type))
+            return node
         case BlockType.ORDERED_LIST:
-            pass
+            node = ParentNode("ol", text_to_list_items(block_node.text, block_node.block_type))
+            return node
         case _:
             raise ValueError("invalid block type")
 
@@ -80,7 +87,24 @@ def text_to_children(text):
     leaf_nodes = list(map(lambda x : text_node_to_html_node(x), text_nodes))
     return leaf_nodes
 
-def text_to_list_item(text):
-    pass     
+def text_to_list_items(text, block_type):
+    list_items = text.split("\n")
+    match block_type:
+        case BlockType.UNORDERED_LIST:
+            list_items = list(map(lambda x : x.lstrip("- "), list_items))
+            list_items = list(map(lambda x : make_list_item(x), list_items))
+            print(list_items)
+            return list_items
+        case BlockType.ORDERED_LIST:
+            list_items = list(map(lambda x : re.sub(r"(^\d+\.\s)", "", x), list_items))
+            list_items = list(map(lambda x : make_list_item(x), list_items))
+            print(list_items)
+            return list_items
+        case _:
+            raise ValueError("invalid block type")
+
+def make_list_item(text):
+    node = ParentNode("li", children = text_to_children(text))
+    return node
 
             
