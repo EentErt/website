@@ -1,28 +1,38 @@
 from textnode import TextNode
 import os
 import shutil
+import re
 
 def clean_directory():
-    if os.path.exists("../public/"):
-        shutil.rmtree("../public/")
+    if os.path.exists("public"):
+        shutil.rmtree("public")
 
-def get_file_list(current_path):
+def copy_files(current_path, public_path):
     if os.path.isfile(current_path):
+        shutil.copy(current_path, public_path)
         pass
-    file_list = os.listdir(current_path)
-    file_list = list(map(lambda x : get_file_list(x), file_list))
-    return file_list
+    if os.path.isdir(current_path):
+        os.mkdir(public_path)
+        contents = os.listdir(current_path)
+        for item in contents:
+            new_path = os.path.join(current_path, item)
+            new_public_path = os.path.join(public_path, item)
+            copy_files(new_path, new_public_path)
+    pass
 
-def copy_static_to_public():
-    file_list = os.listdir("static")
-    print(file_list)
-    #file_list = get_file_list(file_list)
-    print(file_list)
+def extract_title(markdown):
+    match = re.search(r"(?<!#)#\s(.*?)\n", markdown)
+    if match is None:
+        raise Exception("No title found")
+    title = match.group(1)
+    return title
 
 def main():
     clean_directory()
-    copy_static_to_public()
-    get_file_list("static")
+    copy_files("static", "public")
+    title = extract_title("# Title\n## Not Title")
+    print(title)
+
     
 
     
