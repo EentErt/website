@@ -2,6 +2,7 @@ from textnode import TextNode
 import os
 import shutil
 import re
+from markdown_to_html import markdown_to_html_node
 
 def clean_directory():
     if os.path.exists("public"):
@@ -27,11 +28,28 @@ def extract_title(markdown):
     title = match.group(1)
     return title
 
+def generate_page(from_path, template_path, dest_path):
+    print(f"Generating page from {from_path} to {dest_path} using {template_path}")
+    with open(from_path) as file:
+        markdown = file.read()
+    title = extract_title(markdown)    
+    html = markdown_to_html_node(markdown)
+    with open(template_path) as file:
+        template = file.read()
+        output = template.replace(r"{{ Title }}", title)
+        output = output.replace(r"{{ Content }}", html)
+        with open(dest_path, "w") as destination:
+            destination.write(output)
+    pass
+
+
+
+
 def main():
     clean_directory()
     copy_files("static", "public")
-    title = extract_title("# Title\n## Not Title")
-    print(title)
+    generate_page("content/index.md", "template.html", "public/index.html")
+
 
     
 
