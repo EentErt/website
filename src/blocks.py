@@ -72,10 +72,8 @@ def block_to_html_node(block_node):
             parent = ParentNode("pre", children = child)
             return parent
         case BlockType.QUOTE:
-            print(block_node.text)
             text = re.sub(r"^>\s", "", block_node.text)
             text = re.sub(r">\s*", "<br>", text, flags=re.MULTILINE)
-            print(text)
             return ParentNode("blockquote", text_to_children(text))
         case BlockType.UNORDERED_LIST:
             node = ParentNode("ul", text_to_list_items(block_node.text, block_node.block_type))

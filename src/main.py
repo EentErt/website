@@ -42,14 +42,36 @@ def generate_page(from_path, template_path, dest_path):
             destination.write(output)
     pass
 
+def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
+    if os.path.isfile(dir_path_content):
+        with open(dir_path_content) as file:
+            markdown = file.read()
+        title = extract_title(markdown)
+        html = markdown_to_html_node(markdown)
+        with open(template_path) as file:
+            template = file.read()
+            output = template.replace(r"{{ Title }}", title)
+            output = output.replace(r"{{ Content }}", html)
+            dest_path = re.sub(r".md$", ".html", dest_dir_path)
+            with open(dest_path, "w") as destination:
+                destination.write(output)
+    if os.path.isdir(dir_path_content):
+        if os.path.exists(dest_dir_path) != True:
+            os.mkdir(dest_dir_path)
+        contents = os.listdir(dir_path_content)
+        for item in contents:
+            new_path = os.path.join(dir_path_content, item)
+            new_dest_path = os.path.join(dest_dir_path, item)
+            generate_pages_recursive(new_path, template_path, new_dest_path)
+
+    pass
 
 
 
 def main():
     clean_directory()
     copy_files("static", "public")
-    generate_page("content/index.md", "template.html", "public/index.html")
-
+    generate_pages_recursive("content", "template.html", "public")
 
     
 
