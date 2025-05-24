@@ -55,7 +55,6 @@ def generate_pages_recursive(dir_path_content, template_path, dest_dir_path, bas
             output = output.replace(r"{{ Content }}", html)
             output = output.replace(r'href="/', f"href=\"{basepath}")
             output = output.replace(r'src="/', f"src=\"{basepath}")
-            print(output)
             dest_path = re.sub(r".md$", ".html", dest_dir_path)
             with open(dest_path, "w") as destination:
                 destination.write(output)
@@ -79,7 +78,6 @@ def main():
     else: basepath = "/"
     copy_files("static", "docs")
     generate_pages_recursive("content", "template.html", "docs", basepath)
-    print(basepath)
 
     
 
